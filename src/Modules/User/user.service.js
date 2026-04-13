@@ -7,5 +7,7 @@ const jwtSecret = envConfig.jwt;
 export const getProfileService = async (headers) => {
   const accessToken = headers.authorization;
 
-  return await decodeToken({ token: accessToken });
+  const decodedData = await decodeToken({ token: accessToken }); 
+
+  return await UserRepository.findDocumentById(decodedData._id); 
 };

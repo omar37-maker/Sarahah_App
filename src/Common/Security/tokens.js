@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import { USER_ROLES } from "../constants.js";
+// import UserRepository from "../../DB/Repositories/user.repository.js";
 import envConfig from "../../config/env.config.js";
+import { UserRepository } from "../../DB/Repositories/index.js";
 const jwtSecret = envConfig.jwt;
 
 export const generateToken = ({ payload, secret, options }) => {
@@ -21,27 +23,21 @@ export const createLoginCredentials = ({ payload, secret, options }) => {
   return { accessToken };
 };
 
-export const decodeToken = async ({ token, secret }) => {
+export const decodeToken = async ({ token }) => {
   const data = jwt.decode(token);
-  console.log({ data });
 
-  if (!data.role) {
-    throw new Error("Invalid token", { cause: { status: 400 } });
-  }
+  if (!data.role) 
+    throw new Error("invalid payload", { cause: { status: 400 } });
 
-  const { accessSignature } = detectSignatureByRole({ role: data.role });
-  console.log({ accessSignature });
 
-  const decodedData = verifyToken({ token, secret: accessSignature });
-  console.log({ decodedData });
+    const { accessSignature } = detectSignatureByRole({ role: data.role });
 
-  if (!decodedData.sub) {
-    throw new Error("Invalid token", { cause: { status: 400 } });
-  }
+    const decodedData = verifyToken({ token, secret: accessSignature });
 
-  const { default: UserRepository } =
-    await import("../../DB/Repositories/user.repository.js");
-  return UserRepository.findDocumentById(decodedData._id);
+  if (!decodedData._id) 
+      throw new Error("invalid payload", { cause: { status: 400 } });
+
+      return UserRepository.findDocumentById(decodedData._id);
 };
 
 export const detectSignatureByRole = ({ role }) => {

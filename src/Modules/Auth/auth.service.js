@@ -1,4 +1,4 @@
-import { User } from "../../DB/Models/index.js"  
+
 import { encrypt, hash, compare, createLoginCredentials } from "../../Common/index.js";
 import UserRepository from "../../DB/Repositories/user.repository.js";
 import envConfig from "../../config/env.config.js";
@@ -42,17 +42,17 @@ export const loginService = async (body) => {
     if (!user) {
         throw new Error("Invalid email or password ", {cause:{status:401}})
     }
-    const isPasswordValid = await compare(password, user.password)      
+    const isPasswordValid = await compare(password, user.password)   
+    
     if (!isPasswordValid) {
         throw new Error("Invalid email or password", {cause:{status:401 }})
     }
 
     const { accessToken } = createLoginCredentials({
         payload: { _id: user._id , email, role: user.role },
-        secret: jwtSecret.user.accessSignature,
         options: {
             expiresIn: jwtSecret.user.accessExpiration,
-            audience: ["web", "mobile"],
+            audience: ['access'],
             noTimestamp: true
 
         }

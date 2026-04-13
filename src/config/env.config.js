@@ -22,11 +22,18 @@ const envConfig = {
     user: {
       accessSignature: process.env.JWT_ACCESS_SECRET_USER,
       accessExpiration: process.env.JWT_ACCESS_EXPIRATION_USER,
+
+      refreshSignature: process.env.JWT_REFRESH_SECRET_USER,
+      refreshExpiration: process.env.JWT_REFRESH_SECRET_USER,
+
     },
 
     admin: {
       accessSignature: process.env.JWT_ACCESS_SECRET_ADMIN,
       accessExpiration: process.env.JWT_ACCESS_EXPIRATION_ADMIN,
+
+      refreshSignature: process.env.JWT_REFRESH_SECRET_ADMIN,
+      refreshExpiration: process.env.JWT_REFRESH_EXP_ADMIN
     },
   },
 };
