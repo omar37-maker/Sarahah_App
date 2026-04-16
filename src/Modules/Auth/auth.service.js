@@ -1,5 +1,6 @@
 
-import { encrypt, hash, compare, createLoginCredentials } from "../../Common/index.js";
+import { decode } from "jsonwebtoken";
+import { encrypt, hash, compare, createLoginCredentials, decodeToken, TOKEN_TYPES } from "../../Common/index.js";
 import UserRepository from "../../DB/Repositories/user.repository.js";
 import envConfig from "../../config/env.config.js";
 
@@ -48,15 +49,39 @@ export const loginService = async (body) => {
         throw new Error("Invalid email or password", {cause:{status:401 }})
     }
 
-    const { accessToken } = createLoginCredentials({
-        payload: { _id: user._id , email, role: user.role },
-        options: {
-            expiresIn: jwtSecret.user.accessExpiration,
-            audience: ['access'],
-            noTimestamp: true
+    let tokePayload = {_id: user._id, email, role:user.role}
+    const { accessToken, refreshToken } = createLoginCredentials({
+      payload: tokePayload,
+      options: {
+        access: {
+          expiresIn: jwtSecret[user.role].accessExpiration,
+        },
 
-        }
-    })
-    return accessToken
+        refresh: {
+          expiresIn: jwtSecret[user.role].refreshExpiration,
+        },
+      },
+    });
+
+    return { accessToken, refreshToken }
+    
+}
+
+export const refreshTokenService = async (header) => {
+    const { authorization: refreshToken } = header
+    const { decodeToken } = await decodeToken({ token: refreshToken, tokenType: TOKEN_TYPES.REFRESH })
+    
+     const { accessToken } = createLoginCredentials({
+       payload: {_id: decodedData._id, role:decodedData.role, email: decodedData.email},
+       options: {
+         access: {
+           expiresIn: jwtSecret[decodedData.role].accessExpiration,
+           },
+           
+         },
+       requiredToken: TOKEN_TYPES.ACCESS
+     });
+
+     return { accessToken };
 }
 

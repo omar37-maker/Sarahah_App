@@ -9,69 +9,63 @@ export class BaseRepository {
       
     }
 
-    createMultipleDocuments(data) {
-        return this.model.insertMany(data);
-        
-    }
-
   findOneDocument(filters, select = {}) {
     return this.model.findOne(filters).select(select);
   }
 
-  findDocumentById(id, select = {}) {
-      return this.model.findById(id).select(select);
+  findDocumentById(id) {
+      return this.model.findById(id);
       
     }
     
-    findAllDocuments(filters, select = {}) {
-        return this.model.find(filters).select(select);
-        
-    }
-    
-    // findWithPagination(filters, options) {
-    // return this.model.paginate(filters, options);
-    // }
-
-    countDocuments(filters = {}) { 
-        return this.model.countDocuments(filters);  
+    findDocuments(filters) {
+        return this.model.find(filters);
         
     }
 
-    documentExists(filters) { 
-        return this.model.exists(filters);
-        
-    }
 
-    updateOneDocument(filters, updateData, options = { new: true }) {
-        return this.model.findOneAndUpdate(filters, updateData, options);
+    updateDocument({ filters, data, options }) {
+        return this.model.updateOne(filters, data, options);
         
     } 
     
-    updateDocumentById(id, updateData, options = { new: true }) {
-        return this.model.findByIdAndUpdate(id, updateData, options); 
-    }
+    updateWithFindOne({ filters, data, options }) {
+       return this.model.findOneAndUpdate(filters, data, options)
+   }
 
-    updateMultipleDocuments(filters, updateData) {
-        return this.model.updateMany(filters, updateData);
+    updateWithFindById({ id, data, options }) {
+        return this.model.findByIdAndUpdate(id, data, options)
         
     }
+
+    updateManyDocument({ filters, data, options }) {
+        return this.model.updateMany(filters, data, options)
+    }
     
 
 
-    deleteOneDocument(filters) {
+    deleteDocument(filters) {
     return this.model.deleteOne(filters);
     }
-    
-    deleteDocumentById(id) {
-        return this.model.findByIdAndDelete(id);
-    }
 
-    deleteMultipleDocuments(filters = {}) {
+    deleteManyDocumnets({ filters }) {
         return this.model.deleteMany(filters)
     }
-     
-    agregateDocuments(pipeline) {
-        return this.model.aggregate(pipeline)
+    
+    deletAll() {
+       return this.model.deleteMany({})
+   }
+
+    deleteWithFindOne({ filters }) {
+        return this.model.findOneAndDelete(filters)
+    }
+
+    deleteWithFindById(id) {
+        return this.model.findByIdAndDelete(id)
+    }
+
+    countDocuments(filters) {
+        return this.model.countDocuments(filters)
     }
 }
 

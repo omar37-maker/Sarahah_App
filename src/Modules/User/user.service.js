@@ -1,13 +1,24 @@
-import jwt from "jsonwebtoken";
-import envConfig from "../../config/env.config.js";
-import UserRepository from "../../DB/Repositories/user.repository.js";
-import { decodeToken, verifyToken } from "../../Common/index.js";
-const jwtSecret = envConfig.jwt;
+import { UserRepository } from "../../DB/Repositories/index.js";
 
-export const getProfileService = async (headers) => {
-  const accessToken = headers.authorization;
 
-  const decodedData = await decodeToken({ token: accessToken }); 
+export const getProfileService = (req) => {
 
-  return await UserRepository.findDocumentById(decodedData._id); 
+  return req.user
 };
+
+export const updateUserProfile = async (user, body) => {
+  const { _id } = user
+  const { firstName, lastName, age, gender, email } = body
+  
+  if (email) {
+    const existingUser = await UserRepository.findOneDocument({ email })
+    if (existingUser) {
+      throw new Error("Email already exists", {cause: {status:409}})
+    }
+  }
+  return UserRepository.updateWithFindById({id: _id, data: { firstName, lastName, age, gender, email }, options: {new:true}})
+}
+
+export const getAllUsers = async () => {
+  return UserRepository.findDocuments({})
+}

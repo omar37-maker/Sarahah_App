@@ -1,6 +1,6 @@
 import crypto from "node:crypto"
 import envConfig from "../../config/env.config.js"
-import fs from 'node:fs'
+
 const encryptionEnv = envConfig.encryption
 
 const encryptionKey = Buffer.from(encryptionEnv.ENCRYPTION_KEY, 'hex')

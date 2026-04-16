@@ -11,7 +11,12 @@ authController.post('/register', async (req, res) => {
 
 authController.post('/login', async (req, res) => {
     const result = await authService.loginService(req.body)
-    res.status(200).json({message: "User logged in successfully", accessToken: result })
+    res.status(200).json({message: "User logged in successfully", ...result })
+})
+
+authController.post('/refresh-token', async (req, res) => {
+    const result = await authService.refreshTokenService(req.headers)
+    res.status(200).json({message: "Token refreshed succeessfully", ...result})
 })
 
 export default authController
