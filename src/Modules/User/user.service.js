@@ -1,4 +1,6 @@
+import { BadRequestException } from "../../Common/index.js";
 import { UserRepository } from "../../DB/Repositories/index.js";
+import userRepository from "../../DB/Repositories/user.repository.js";
 
 
 export const getProfileService = (req) => {
@@ -21,4 +23,14 @@ export const updateUserProfile = async (user, body) => {
 
 export const getAllUsers = async () => {
   return UserRepository.findDocuments({})
+}
+
+
+export const uploadProfilePicture = async (user, file) => {
+  if (!file || !file.path) throw new BadRequestException('File is required')
+  return userRepository.updateWithFindById({
+    id: user._id,
+    data: { profilePicture: file.path },
+    options:{new:true}
+  })
 }

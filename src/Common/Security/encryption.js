@@ -29,7 +29,7 @@ export const encrypt = (plainText) => {
 export const decrypt = (inputCipher) => {
     const [iv, encryptedData] = inputCipher.split(":");
     const bufferIV = Buffer.from(iv, 'hex');
-    const decripher = crypto.createDecipheriv('aes-256-cbc', encryptionKey, bufferIV);
+    const decripher = crypto.createDecipheriv('aes-256-cbc', encryptionKey, bufferedIV);
     let decrypted = decripher.update(encryptedData, "hex", "utf-8");
     decrypted += decripher.final('utf-8');
     return decrypted

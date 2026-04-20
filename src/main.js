@@ -5,12 +5,18 @@ import dbConnection from "./DB/db.connection.js";
 import { globalErrorHandler } from "./Middlewares/index.js";
 import * as controllers from "./Modules/index.js";
 import { NotFoundException } from "./Common/index.js";
+import { corsOptions } from "./config/cors.config.js"; 
+import cors from "cors"
 
 
 const app = express();
 const port = envConfig.app.PORT;
 
 dbConnection();
+
+app.use(cors(corsOptions))
+
+app.use('/uploads', express.static('uploads'))
 
 app.use(express.json());
 
