@@ -4,7 +4,8 @@ import envConfig from "./config/env.config.js";
 import dbConnection from "./DB/db.connection.js";
 import { globalErrorHandler } from "./Middlewares/index.js";
 import * as controllers from "./Modules/index.js";
-import { decrypt, encrypt } from './Common/index.js';
+import { NotFoundException } from "./Common/index.js";
+
 
 const app = express();
 const port = envConfig.app.PORT;
@@ -22,18 +23,16 @@ app.get("/", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  res.status(404).json({ message: "Route not found" });
+  throw new NotFoundException('This router is not found', {path:req.path})
 });
 
 app.use(globalErrorHandler);
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port `, port);
 });
 
-const encrypteData = encrypt("Hello, World!");
-const decrypted = decrypt(encrypteData)
-console.log({ encrypteData, decrypted });
+
 
 
 

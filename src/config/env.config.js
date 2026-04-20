@@ -36,6 +36,9 @@ const envConfig = {
       refreshExpiration: process.env.JWT_REFRESH_EXP_ADMIN
     },
   },
+  cors: {
+    whiteListOrigins: process.env.CORS_WHITELISTED_ORIGINS?.split(',')
+  }
 };
 
 export default envConfig

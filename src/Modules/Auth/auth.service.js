@@ -1,23 +1,15 @@
 
-import { decode } from "jsonwebtoken";
-import { encrypt, hash, compare, createLoginCredentials, decodeToken, TOKEN_TYPES } from "../../Common/index.js";
+import { encrypt, hash, compare, createLoginCredentials, decodeToken, TOKEN_TYPES, HttpAppError, ConflictException } from "../../Common/index.js";
 import UserRepository from "../../DB/Repositories/user.repository.js";
 import envConfig from "../../config/env.config.js";
 
 const jwtSecret = envConfig.jwt
 
 export const registerService = async (body) => {
-    console.log({body});
-    
     const { firstname, lastname, email, password, gender, phone } = body
-
     const checkEmailDuplication = await UserRepository.findOneDocument({ email }, { email: 1 })
-    
-    console.log({checkEmailDuplication});
-    
-
     if (checkEmailDuplication) {
-        throw new Error("email already exists", { cause: { status: 409 } })
+      throw new ConflictException("email already exists", 409, "EMAIL_EXISTS", { duplicatedEmail: email })
     }
     const hashedPassword = await hash(password , 12)
     const userObject = {
