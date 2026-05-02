@@ -1,19 +1,10 @@
+import { Message } from "../Models/index.js";
+import BaseRepository from "./base.repository.js";
 
-import { Message } from "../../DB/Models/index.js";
+class MessageRepository extends BaseRepository {
+  constructor() {
+    super(Message);
+  }
+}
 
-
-class MessageRepository { 
-    createNewMessage(data) {
-        return Message.create(data)
-    }
-
-    findOneMessage(filters) {
-        return Message.findOne(filters)
-    }
-
-    findMessage(filters) {
-        return Message.find(filters)
-    }   
-}   
-
-export default new MessageRepository()  
+export default new MessageRepository();

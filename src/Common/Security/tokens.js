@@ -6,7 +6,7 @@ import { UserRepository } from "../../DB/Repositories/index.js";
 const jwtSecret = envConfig.jwt;
 
 export const generateToken = ({ payload, secret, options }) => {
-  return jwt.sign(payload, secret, options);  
+  return jwt.sign(payload, secret, options);
 };
 
 export const verifyToken = ({ token, secret, options }) => {
@@ -14,10 +14,12 @@ export const verifyToken = ({ token, secret, options }) => {
 };
 
 export const createLoginCredentials = ({ payload, options, requiredToken }) => {
-  const signatures = getSignatureByTypeAndRole({ role: payload.role, both: true })
- 
-  
- let accessToken, refreshToken;
+  const signatures = getSignatureByTypeAndRole({
+    role: payload.role,
+    both: true,
+  });
+
+  let accessToken, refreshToken;
   switch (requiredToken) {
     case TOKEN_TYPES.ACCESS:
       const accessToken = generateToken({
@@ -32,20 +34,19 @@ export const createLoginCredentials = ({ payload, options, requiredToken }) => {
         secret: signatures.refreshSignature,
         options: options.refresh,
       });
-      break
+      break;
     default:
-       accessToken = generateToken({
+      accessToken = generateToken({
         payload,
         secret: signatures.accessSignature,
-        options: options.access
-    
-  })
-       refreshToken = generateToken({
+        options: options.access,
+      });
+      refreshToken = generateToken({
         payload,
         secret: signatures.refreshSignature,
-        options: options.refresh
-  })
-      break
+        options: options.refresh,
+      });
+      break;
   }
   return { accessToken, refreshToken };
 };
@@ -53,16 +54,16 @@ export const createLoginCredentials = ({ payload, options, requiredToken }) => {
 export const decodeToken = async ({ token, tokenType }) => {
   const data = jwt.decode(token);
 
-  if (!data.role) throw new Error("invalid payload", { cause: { status: 400 } });
+  if (!data.role)
+    throw new Error("invalid payload", { cause: { status: 400 } });
 
-
-  const signature = getSignatureByTypeAndRole({ role: data.role, tokenType })
+  const signature = getSignatureByTypeAndRole({ role: data.role, tokenType });
   const decodedData = verifyToken({ token, secret: signature });
-  if (!decodedData._id) throw new Error("invalid payload", { cause: { status: 400 } });
+  if (!decodedData._id)
+    throw new Error("invalid payload", { cause: { status: 400 } });
   const user = await UserRepository.findDocumentById(decodedData._id);
 
-  return { user, decodeToken }
-  
+  return { user, decodeToken };
 };
 
 export const detectSignatureByRole = ({ role }) => {
@@ -76,23 +77,25 @@ export const detectSignatureByRole = ({ role }) => {
   return signatures;
 };
 
+export const getSignatureByTypeAndRole = ({
+  role,
+  tokenType,
+  both = false,
+}) => {
+  const signatures = detectSignatureByRole({ role });
 
-export const getSignatureByTypeAndRole = ({ role, tokenType, both=false }) => {
-  const signatures = detectSignatureByRole({ role })
+  if (both) return signatures;
 
-  if(both) return signatures
-  
-  let tokenSignature
+  let tokenSignature;
   switch (tokenType) {
     case TOKEN_TYPES.ACCESS:
-      tokenSignature = signatures.accessSignature
-      break
+      tokenSignature = signatures.accessSignature;
+      break;
     case TOKEN_TYPES.REFRESH:
-      tokenSignature = signatures.refreshSignature
-      break
+      tokenSignature = signatures.refreshSignature;
+      break;
     default:
-      throw new Error('Invalid token type', { cause: { status: 409 } })
-    
+      throw new Error("Invalid token type", { cause: { status: 409 } });
   }
-  return tokenSignature
-}
+  return tokenSignature;
+};

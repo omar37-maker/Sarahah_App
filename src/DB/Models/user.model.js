@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { GENDER, USER_ROLES, STATUS, PROVIDERS } from "../../Common/index.js";
 
-
 const userSchema = new mongoose.Schema(
   {
     firstname: {
@@ -33,33 +32,32 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: Object.values(USER_ROLES),
-      default: USER_ROLES.USER
+      default: USER_ROLES.USER,
     },
     gender: {
       type: String,
-      enum: Object.values(GENDER)
+      enum: Object.values(GENDER),
     },
     status: {
       type: String,
-        enum: Object.values(STATUS),
-      default: STATUS.ACTIVE
+      enum: Object.values(STATUS),
+      default: STATUS.ACTIVE,
     },
     phoneNumber: String,
     age: Number,
     googleSub: {
       type: String,
       index: {
-        name: 'idx_googleSub_unique',
-        unique:true
+        name: "idx_googleSub_unique",
+        unique: true,
       },
-      
     },
     provider: {
       type: String,
       enum: Object.values(PROVIDERS),
-      default: PROVIDERS.SYSTEM
+      default: PROVIDERS.SYSTEM,
     },
-    profilePicture: String
+    profilePicture: String,
   },
   {
     toJSON: {
@@ -71,9 +69,9 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-userSchema.virtual('fullname').get(function () {
-    return this.firstname + " " + this.lastname 
-})
+userSchema.virtual("fullname").get(function () {
+  return this.firstname + " " + this.lastname;
+});
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 export default User;

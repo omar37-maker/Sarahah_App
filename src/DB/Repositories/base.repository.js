@@ -1,71 +1,81 @@
+export default class BaseRepository {
+  constructor(model) {
+    this.model = model;
+  }
 
-export class BaseRepository {
-
-    constructor(model) { 
-        this.model = model;
-    }
   createDocument(data) {
-      return this.model.create(data);
-      
-    }
+    return this.model.create(data);
+  }
 
   findOneDocument(filters, select = {}) {
     return this.model.findOne(filters).select(select);
   }
 
   findDocumentById(id) {
-      return this.model.findById(id);
-      
+    return this.model.findById(id);
+  }
+
+  findDocuments(filters, options) {
+    const { limit, skip, ...otherOptions } = options;
+    const query = this.model.find(filters, otherOptions);
+    if (limit && skip) {
+      return query.limit(limit).skip(skip);
     }
-    
-    findDocuments(filters) {
-        return this.model.find(filters);
-        
-    }
+    return query;
+  }
 
+  updateDocument({ filters, data, options }) {
+    return this.model.updateOne(filters, data, options);
+  }
 
-    updateDocument({ filters, data, options }) {
-        return this.model.updateOne(filters, data, options);
-        
-    } 
-    
-    updateWithFindOne({ filters, data, options }) {
-       return this.model.findOneAndUpdate(filters, data, options)
-   }
+  updateWithFindOne({ filters, data, options }) {
+    return this.model.findOneAndUpdate(filters, data, options);
+  }
 
-    updateWithFindById({ id, data, options }) {
-        return this.model.findByIdAndUpdate(id, data, options)
-        
-    }
+  updateWithFindById({ id, data, options }) {
+    return this.model.findByIdAndUpdate(id, data, {
+      ...options,
+      validator: true,
+    });
+  }
 
-    updateManyDocument({ filters, data, options }) {
-        return this.model.updateMany(filters, data, options)
-    }
-    
+  updateManyDocuments({ filters, data, options }) {
+    return this.model.updateMany(filters, data, options);
+  }
 
-
-    deleteDocument(filters) {
+  deleteDocument({ filters }) {
     return this.model.deleteOne(filters);
-    }
+  }
 
-    deleteManyDocumnets({ filters }) {
-        return this.model.deleteMany(filters)
-    }
-    
-    deletAll() {
-       return this.model.deleteMany({})
-   }
+  deleteAll() {
+    return this.model.deleteMany({});
+  }
 
-    deleteWithFindOne({ filters }) {
-        return this.model.findOneAndDelete(filters)
-    }
+  deleteWithFindOne({ filters }) {
+    return this.model.findOneAndDelete(filters);
+  }
 
-    deleteWithFindById(id) {
-        return this.model.findByIdAndDelete(id)
+  // { new:true, session }
+  deleteManyDocuments({ filters, options = {} }) {
+    const { session, ...otherOptions } = options;
+    const query = this.model.deleteMany(filters, otherOptions);
+    if (session) {
+      return query.session(session);
     }
+    // this.model.deleteMany(filters, otherOptions).session(session);
+    return query;
+  }
 
-    countDocuments(filters) {
-        return this.model.countDocuments(filters)
+  deleteWithFindById({ _id, options = {} }) {
+    const { session, ...otherOptions } = options;
+    const query = this.model.findByIdAndDelete(_id, otherOptions);
+    if (session) {
+      return query.session(session);
     }
+    return query;
+  }
+
+  countDocuments(filters) {
+    return this.model.countDocuments(filters);
+  }
 }
-

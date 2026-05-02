@@ -1,10 +1,8 @@
 import { config } from "dotenv";
 
-
 // console.log({env: process.env.NODE_ENV});
 
-
-config({ path: [`.${process.env.NODE_ENV}.env`, '.env'] })
+config({ path: [`.${process.env.NODE_ENV}.env`, ".env"] });
 
 const envConfig = {
   app: {
@@ -25,7 +23,6 @@ const envConfig = {
 
       refreshSignature: process.env.JWT_REFRESH_SECRET_USER,
       refreshExpiration: process.env.JWT_REFRESH_SECRET_USER,
-
     },
 
     admin: {
@@ -33,12 +30,12 @@ const envConfig = {
       accessExpiration: process.env.JWT_ACCESS_EXPIRATION_ADMIN,
 
       refreshSignature: process.env.JWT_REFRESH_SECRET_ADMIN,
-      refreshExpiration: process.env.JWT_REFRESH_EXP_ADMIN
+      refreshExpiration: process.env.JWT_REFRESH_EXP_ADMIN,
     },
   },
   cors: {
-    whiteListOrigins: process.env.CORS_WHITELISTED_ORIGINS?.split(',')
-  }
+    whiteListOrigins: process.env.CORS_WHITELISTED_ORIGINS?.split(","),
+  },
 };
 
-export default envConfig
+export default envConfig;

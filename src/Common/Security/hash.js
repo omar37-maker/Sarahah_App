@@ -1,12 +1,10 @@
-// import bcrypt from "bcrypt"
-import argon2 from "argon2"
-
+import argon2 from "argon2";
 
 export const hash = (plainText) => {
-    return argon2.hash(plainText)
-}
+  return argon2.hash(plainText);
+};
 
 export const compare = (plainText, hashedText) => {
-    // return bcrypt.compare(plainText, hashedText)
-    return argon2.verify(hashedText, plainText)
-}
+  // return bcrypt.compare(plainText, hashedText)
+  return argon2.verify(hashedText, plainText);
+};
