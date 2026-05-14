@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import envConfig from "../config/env.config.js";
+import { envConfig } from "../config/index.js";
 const database = envConfig.database;
 
 const dbConnection = async () => {
@@ -7,7 +7,7 @@ const dbConnection = async () => {
     await mongoose.connect(database.MONGO_URL);
     console.log("Database connected successfully");
   } catch (error) {
-    console.log("Database connection error:", error);
+    console.log("Database connection failed", error);
   }
 };
 

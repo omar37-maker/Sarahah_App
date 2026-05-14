@@ -1,4 +1,4 @@
-import "./config/env.config.js";
+
 import express from "express";
 import cors from "cors";
 import { envConfig, corsOptions } from "./config/index.js";

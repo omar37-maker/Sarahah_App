@@ -23,3 +23,11 @@ export class InternalServerErrorException extends HttpAppError {
     super(message, 500, "INTERNAL_SERVER_ERROR", details);
   }
 }
+
+export class TooManyRequestsException extends HttpAppError {
+  constructor(message = "Too Many Requests", details = null) {
+    super(message, 429, "TOO_MANY_REQUESTS", details);
+  }
+}
+
+// Circular dependency issue

@@ -9,7 +9,7 @@ import {
   ConflictException,
 } from "../../Common/index.js";
 import UserRepository from "../../DB/Repositories/user.repository.js";
-import envConfig from "../../config/env.config.js";
+import { envConfig } from "../../config/env.config.js";
 
 const jwtSecret = envConfig.jwt;
 

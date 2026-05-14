@@ -1,11 +1,12 @@
-import envConfig from "./env.config.js";
-const whiteListOrigins = envConfig.cors.whiteListOrigins;
+import { envConfig } from "./index.js";
+const whiteListedOrigins = envConfig.cors.whiteListedOrigins;
+
 export const corsOptions = {
   origin: (origin, callback) => {
-    if (whiteListOrigins.includes(origin) || !origin) {
+    if (whiteListedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {
-      callback(new Error("not allowed by cors"));
+      callback(new Error("Not allowed by CORS"));
     }
   },
 };

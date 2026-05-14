@@ -1,10 +1,8 @@
 import { config } from "dotenv";
 
-// console.log({env: process.env.NODE_ENV});
-
 config({ path: [`.${process.env.NODE_ENV}.env`, ".env"] });
 
-const envConfig = {
+export const envConfig = {
   app: {
     NODE_ENV: process.env.NODE_ENV ?? "dev",
     PORT: process.env.PORT ?? 8000,
@@ -19,23 +17,31 @@ const envConfig = {
   jwt: {
     user: {
       accessSignature: process.env.JWT_ACCESS_SECRET_USER,
-      accessExpiration: process.env.JWT_ACCESS_EXPIRATION_USER,
+      accessExpiration: process.env.JWT_ACCESS_EXP_USER,
 
       refreshSignature: process.env.JWT_REFRESH_SECRET_USER,
-      refreshExpiration: process.env.JWT_REFRESH_SECRET_USER,
+      refreshExpiration: process.env.JWT_REFRESH_EXP_USER,
     },
-
     admin: {
       accessSignature: process.env.JWT_ACCESS_SECRET_ADMIN,
-      accessExpiration: process.env.JWT_ACCESS_EXPIRATION_ADMIN,
+      accessExpiration: process.env.JWT_ACCESS_EXP_ADMIN,
 
       refreshSignature: process.env.JWT_REFRESH_SECRET_ADMIN,
       refreshExpiration: process.env.JWT_REFRESH_EXP_ADMIN,
     },
   },
   cors: {
-    whiteListOrigins: process.env.CORS_WHITELISTED_ORIGINS?.split(","),
+    whiteListedOrigins: process.env.CORS_WHITELISTED_ORIGINS?.split(","),
+  },
+  gcp: {
+    webClientId: process.env.GCP_CLIENT_ID,
+  },
+  redis: {
+    url: process.env.REDIS_URL || "redis://localhost:6379",
+  },
+  emails: {
+    service: process.env.EMAIL_SERVICE,
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 };
-
-export default envConfig;

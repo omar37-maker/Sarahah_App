@@ -5,6 +5,5 @@ export const hash = (plainText) => {
 };
 
 export const compare = (plainText, hashedText) => {
-  // return bcrypt.compare(plainText, hashedText)
   return argon2.verify(hashedText, plainText);
 };

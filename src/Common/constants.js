@@ -24,8 +24,13 @@ export const PROVIDERS = {
   FACEBOOK: "facebook",
 };
 
-export const fileExtenstions = {
-  image: ["jpg", "jpeg", "ping", "gif"],
+export const fileExtensions = {
+  image: ["jpg", "jpeg", "png", "gif"],
   video: ["mp4", "avi", "mkv", "mov"],
   application: ["pdf", "doc", "docx"],
+};
+
+export const CHANNELS = {
+  EMAIL: "email",
+  PHONE: "phone",
 };
